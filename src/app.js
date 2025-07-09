@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import errorMiddleware from "./middlewares/error.middlewares.js"
 const app = express()
 app.use(
     cors({
@@ -17,4 +18,5 @@ import adminRouter from "./routes/admin.routes.js"
 
 app.use("/api/v1/admin", adminRouter)
 
+app.use(errorMiddleware)
 export { app }
