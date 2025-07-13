@@ -1,6 +1,5 @@
+import util from "util"
 const errorMiddleware = (err, req, res, next) => {
-    console.error("💥 Error caught by global middleware")
-
     // Basic info
     console.error("➡️ Name:", err.name)
     console.error("➡️ Message:", err.message)
