@@ -15,8 +15,9 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 import adminRouter from "./routes/admin.routes.js"
-
+import categoryRouter from "./routes/category.routes.js"
 app.use("/api/v1/admin", adminRouter)
+app.use("/api/v1/category", categoryRouter)
 
 app.use(errorMiddleware)
 export { app }
