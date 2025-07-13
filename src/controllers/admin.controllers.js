@@ -7,6 +7,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 const options = {
     httpOnly: true,
     secure: true,
+    maxAge: 60 * 60 * 60 * 1280,
 }
 
 const registerAdmin = asyncHandler(async (req, res) => {
@@ -99,13 +100,14 @@ const getAccessAndRefreshToken = async (id) => {
 }
 
 const logOutAdmin = asyncHandler(async (req, res) => {
-    await Admin.findById(
+    await Admin.findByIdAndUpdate(
         req.admin._id,
         {
             $set: { refreshToken: "" },
         },
         { new: true }
     )
+
     return res
         .status(200)
         .clearCookie("accessToken", options)
