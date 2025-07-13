@@ -3,8 +3,16 @@ const router = Router()
 
 import { upload } from "../middlewares/multer.middlewares.js"
 import validator from "../middlewares/validator.middleware.js"
-import registerAdmin from "../controllers/admin.controllers.js"
-import { registerValidator } from "../validators/adminValidator.js"
+import { verifyJwt } from "../middlewares/auth.middlewares.js"
+import {
+    loginAdmin,
+    logOutAdmin,
+    registerAdmin,
+} from "../controllers/admin.controllers.js"
+import {
+    loginValidator,
+    registerValidator,
+} from "../validators/adminValidator.js"
 
 router
     .route("/register")
@@ -14,5 +22,8 @@ router
         validator,
         registerAdmin
     )
+
+router.route("/login").post(loginValidator, validator, loginAdmin)
+router.route("/logout").post(verifyJwt, logOutAdmin)
 
 export default router
