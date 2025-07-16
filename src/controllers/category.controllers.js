@@ -59,7 +59,8 @@ const updateCategory = asyncHandler(async (req, res) => {
     // find keys to update.
     //logic, create an object to hold update parameters if it is not undefined.
     const dataToUpdate = {}
-    if (name !== undefined && name !== "") dataToUpdate.name = name
+    if (name !== undefined && name !== "")
+        dataToUpdate.name = name.toLowerCase()
     if (slug !== undefined && slug !== "") dataToUpdate.slug = slug
 
     if (Object.keys(dataToUpdate).length === 0) {
