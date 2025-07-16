@@ -16,8 +16,10 @@ app.use(cookieParser())
 
 import adminRouter from "./routes/admin.routes.js"
 import categoryRouter from "./routes/category.routes.js"
+import postRouter from "./routes/post.routes.js"
 app.use("/api/v1/admin", adminRouter)
 app.use("/api/v1/category", categoryRouter)
+app.use("/api/v1/post", postRouter)
 
 app.use(errorMiddleware)
 export { app }
