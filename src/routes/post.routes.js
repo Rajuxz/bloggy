@@ -5,6 +5,8 @@ import {
     addPost,
     getPostBySlug,
     getPostByAuthorId,
+    deletePost,
+    updatePost,
 } from "../controllers/post.controllers.js"
 import { validatePost } from "../validators/postValidator.js"
 import validator from "../middlewares/validator.middleware.js"
@@ -23,4 +25,8 @@ router
     )
 router.route("/:slug").get(getPostBySlug)
 router.route("/author/:authorId").get(getPostByAuthorId)
+router.route("/:postId").delete(deletePost)
+router
+    .route("/:slug")
+    .patch(upload.fields([{ name: "coverImage", maxCount: 1 }]), updatePost)
 export default router
