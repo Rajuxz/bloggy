@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import { Schema } from "mongoose"
-
+import { DEFAULT_COVER_IMAGE } from "../constants.js"
 const postSchema = new Schema(
     {
         title: {
@@ -33,25 +33,20 @@ const postSchema = new Schema(
         },
         coverImage: {
             type: String,
-            default:
-                "https://res.cloudinary.com/dabfe0sla/image/upload/v1750850768/samples/cup-on-a-table.jpg",
+            default: DEFAULT_COVER_IMAGE,
         },
         views: {
             type: Number,
             default: 0,
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        },
-        updatedAt: {
-            type: Date,
-            default: Date.now,
         },
     },
     {
         timestamps: true, // Auto-manage createdAt/updatedAt
     }
 )
+
+postSchema.statics.isValid = (id) => {
+    return mongoose.Schema.ObjectId.isValid(id)
+}
 
 export const Post = mongoose.model("Post", postSchema)
