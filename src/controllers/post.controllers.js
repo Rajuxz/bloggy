@@ -3,8 +3,12 @@ import ApiError from "../utils/ApiError.js"
 import asyncHandler from "../utils/asyncHandler.js"
 import { Admin } from "../models/admin.models.js"
 import { Post } from "../models/post.models.js"
-import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import {
+    deleteFromCloudinary,
+    uploadOnCloudinary,
+} from "../utils/cloudinary.js"
 import { Category } from "../models/category.models.js"
+import mongoose from "mongoose"
 const addPost = asyncHandler(async (req, res) => {
     const { title, content, author, category, slug } = req.body
     // console.log(title, content, author, category)
@@ -77,4 +81,62 @@ const getPostByAuthorId = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, postByUser))
 })
 
-export { addPost, getPostBySlug, getPostByAuthorId }
+const updatePost = asyncHandler(async (req, res) => {
+    const dataToUpdate = {}
+    const { title, content, category } = req.body
+    const slug = req.params.slug
+    //check if post exists or not.
+    const post = await Post.findOne({ slug })
+    if (!post) throw new ApiError(404, "Post not found.")
+    await validateCategory(category, dataToUpdate)
+    validateTextFields(title, content, dataToUpdate)
+
+    if (
+        req.files &&
+        Array.isArray(req.files.coverImage) &&
+        req.files.coverImage[0]
+    ) {
+        const coverImageLocalPath = req.files.coverImage[0].path
+        await validateImage(coverImageLocalPath, post, dataToUpdate)
+    }
+
+    Object.assign(post, dataToUpdate)
+    const newPost = await post.save()
+    if (!newPost) throw new ApiError(500, "Cannot update post.")
+    return res
+        .status(200)
+        .json(new ApiResponse(200, newPost, "Updated Successfully."))
+})
+const validateTextFields = (title, content, dataToUpdate) => {
+    if (typeof title == "string" && title.trim().length > 5) {
+        dataToUpdate.title = title
+    }
+    if (typeof content == "string" && content.trim().length > 10) {
+        dataToUpdate.content = content
+    }
+}
+
+const validateImage = async (localImage, post, dataToUpdate) => {
+    await deleteFromCloudinary(post.coverImage)
+    const res = await uploadOnCloudinary(localImage)
+    dataToUpdate.coverImage = res.url
+}
+
+const validateCategory = async (category, dataToUpdate) => {
+    if (!category || !mongoose.Types.ObjectId.isValid(category))
+        throw new ApiError(400, "Invalid category id.")
+    const newCategory = await Category.findById({ _id: category })
+    if (!newCategory) throw new ApiError(404, "Category Not Found")
+
+    dataToUpdate.category = newCategory._id
+}
+const deletePost = asyncHandler(async (req, res) => {
+    const post = await Post.findById(req.params.postId)
+    if (!post) throw new ApiError(404, "Post not found to delete.")
+    deleteFromCloudinary(post.coverImage)
+    await post.deleteOne()
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Post Deleted Successfully"))
+})
+export { addPost, getPostBySlug, getPostByAuthorId, deletePost, updatePost }
