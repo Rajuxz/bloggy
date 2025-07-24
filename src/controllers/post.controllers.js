@@ -139,4 +139,33 @@ const deletePost = asyncHandler(async (req, res) => {
         .status(200)
         .json(new ApiResponse(200, "Post Deleted Successfully"))
 })
-export { addPost, getPostBySlug, getPostByAuthorId, deletePost, updatePost }
+const getAllBlogs = asyncHandler(async (_, res) => {
+    const posts = await Post.aggregate([
+        {
+            $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "category",
+            },
+        },
+        {
+            $unwind: "$category",
+        },
+        {
+            $match: { "category.isActive": true },
+        },
+    ])
+    // console.log(posts)
+    return res
+        .status(200)
+        .json(new ApiResponse(200, posts, "All Post fetched successfully."))
+})
+export {
+    addPost,
+    getPostBySlug,
+    getPostByAuthorId,
+    deletePost,
+    updatePost,
+    getAllBlogs,
+}

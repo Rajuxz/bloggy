@@ -28,15 +28,14 @@ const addCategory = asyncHandler(async (req, res) => {
 // Delete category.
 const deleteCategory = asyncHandler(async (req, res) => {
     const { name } = req.body
-    const categoryExists = await Category.find({ name: name })
-    if (!categoryExists) {
+    const category = await Category.find({ name: name })
+    // console.log(category)
+    if (!category || category.isActive === false) {
         throw new ApiError(404, "Category not found.")
     }
-    const status = await Category.deleteOne({ name: name })
-    console.log(status)
-    if (status.deletedCount === 0) {
-        throw new ApiError(500, "Cannot delete category.")
-    }
+
+    category.isActive = false
+    await category.save()
     return res
         .status(200)
         .json(new ApiResponse(200, "Category Deleted Successfully."))
@@ -51,8 +50,9 @@ const updateCategory = asyncHandler(async (req, res) => {
     //get data to update.
     const { name, slug } = req.body
     //find category using id.
+    //if category is inActive, don't let user modify it.
     const category = await Category.findById(req.params.id)
-    if (!category) {
+    if (!category || !category.isActive) {
         throw new ApiError(404, "Category not found.")
     }
 
@@ -89,7 +89,7 @@ const updateCategory = asyncHandler(async (req, res) => {
 
 //all categories.
 const getAllCategories = asyncHandler(async (_, res) => {
-    const categories = await Category.find({})
+    const categories = await Category.find({ isActive: true })
     if (!categories.length) {
         throw new ApiError(404, "No record found.")
     }
@@ -97,5 +97,32 @@ const getAllCategories = asyncHandler(async (_, res) => {
         .status(200)
         .json(new ApiResponse(200, categories, "All Categories"))
 })
+//special: Get deactivated category
+const getDeactivatedCategory = asyncHandler(async (_, res) => {
+    const categories = await Category.find({ isActive: false })
+    if (categories.length == 0) throw new ApiError(404, "No Categories Found.")
+    return res.status(200).json(new ApiResponse(200, categories))
+})
 
-export { addCategory, deleteCategory, updateCategory, getAllCategories }
+//special: re-activate category.
+const activateCategory = asyncHandler(async (req, res) => {
+    const { name } = req.body
+    const category = await Category.findOne({ name: name })
+    // console.log(category.isActive)
+    if (!category || category.isActive)
+        throw new ApiError(400, "Category is already active.")
+
+    category.isActive = true
+    await category.save()
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Category activated successfully."))
+})
+export {
+    addCategory,
+    deleteCategory,
+    updateCategory,
+    getAllCategories,
+    activateCategory,
+    getDeactivatedCategory,
+}

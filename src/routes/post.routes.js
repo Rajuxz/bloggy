@@ -6,6 +6,7 @@ import {
     getPostBySlug,
     getPostByAuthorId,
     deletePost,
+    getAllBlogs,
     updatePost,
 } from "../controllers/post.controllers.js"
 import { validatePost } from "../validators/postValidator.js"
@@ -17,16 +18,18 @@ router.use(verifyJwt)
 
 router
     .route("/")
+    .get(getAllBlogs)
     .post(
         upload.fields([{ name: "coverImage", maxCount: 1 }]),
         validatePost,
         validator,
         addPost
     )
-router.route("/:slug").get(getPostBySlug)
 router.route("/author/:authorId").get(getPostByAuthorId)
 router.route("/:postId").delete(deletePost)
 router
     .route("/:slug")
+    .get(getPostBySlug)
     .patch(upload.fields([{ name: "coverImage", maxCount: 1 }]), updatePost)
+
 export default router
