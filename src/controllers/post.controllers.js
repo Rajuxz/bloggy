@@ -157,6 +157,7 @@ const getAllBlogs = asyncHandler(async (_, res) => {
         },
     ])
     // console.log(posts)
+    console.log("Hit... getAllBlogs")
     return res
         .status(200)
         .json(new ApiResponse(200, posts, "All Post fetched successfully."))

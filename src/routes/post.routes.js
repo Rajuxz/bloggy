@@ -14,19 +14,18 @@ import validator from "../middlewares/validator.middleware.js"
 
 const router = Router()
 
-router.use(verifyJwt)
-
 router
     .route("/")
     .get(getAllBlogs)
     .post(
+        verifyJwt,
         upload.fields([{ name: "coverImage", maxCount: 1 }]),
         validatePost,
         validator,
         addPost
     )
-router.route("/author/:authorId").get(getPostByAuthorId)
-router.route("/:postId").delete(deletePost)
+router.route("/author/:authorId").get(verifyJwt, getPostByAuthorId)
+router.route("/:postId").delete(verifyJwt, deletePost)
 router
     .route("/:slug")
     .get(getPostBySlug)

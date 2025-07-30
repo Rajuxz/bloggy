@@ -1,9 +1,11 @@
 import "./App.css"
+import { Navbar, Hero } from "./components"
 
 function App() {
     return (
         <>
-            <h1 className="bg-black text-white">Hehe</h1>
+            <Navbar />
+            <Hero />
         </>
     )
 }
