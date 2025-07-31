@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { Sidebar } from "../"
-
 const HeroSection = () => {
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
