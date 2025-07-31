@@ -1,10 +1,11 @@
 import React from "react"
 import { useState } from "react"
 import { SunIcon, MoonIcon } from "@heroicons/react/24/solid"
-
+import { useLocation } from "react-router"
 const Navbar = () => {
     const [darkMode, setDarkMode] = useState(false)
-
+    const location = useLocation()
+    console.log(location.pathname)
     const toggleDarkMode = () => {
         setDarkMode((prev) => !prev)
         if (document.documentElement.classList.contains("dark")) {
@@ -69,9 +70,13 @@ const Navbar = () => {
                 </div>
                 <div className="navbar-center hidden lg:flex"></div>
                 <div className="navbar-end flex items-center gap-2">
-                    <a className="btn btn-sm md:btn-sm bg-gray-200 text-black px-6 font-semibold rounded-lg shadow hover:bg-gray-300 transition">
-                        Login
-                    </a>
+                    {location.pathname === "/login" ? (
+                        ""
+                    ) : (
+                        <a className="btn btn-sm md:btn-sm bg-gray-200 text-black px-6 font-semibold rounded-lg shadow hover:bg-gray-300 transition">
+                            Login
+                        </a>
+                    )}
                     <button
                         onClick={toggleDarkMode}
                         className="ml-2 btn btn-sm md:btn-sm bg-gray-800 text-white rounded-lg flex items-center px-4 hover:bg-gray-900 transition"
