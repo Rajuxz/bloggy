@@ -140,6 +140,10 @@ const deletePost = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Post Deleted Successfully"))
 })
 const getAllBlogs = asyncHandler(async (_, res) => {
+    // get pagination params fron queyr
+    const page = parseInt(_.query.page) || 1
+    const limit = parseInt(_.query.limit) || 10
+    const skip = (page - 1) * limit
     const posts = await Post.aggregate([
         {
             $lookup: {
@@ -155,9 +159,15 @@ const getAllBlogs = asyncHandler(async (_, res) => {
         {
             $match: { "category.isActive": true },
         },
+        {
+            $skip: skip,
+        },
+        {
+            $limit: limit,
+        },
     ])
     // console.log(posts)
-    console.log("Hit... getAllBlogs")
+    // console.log("Hit... getAllBlogs")
     return res
         .status(200)
         .json(new ApiResponse(200, posts, "All Post fetched successfully."))
