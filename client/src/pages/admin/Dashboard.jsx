@@ -7,9 +7,8 @@ const Dashboard = () => {
         <div className="flex min-h-screen">
             {/* Sidebar */}
             <Sidebar />
-
             {/* Page content */}
-            <main className="flex-1 bg-gray-400 p-4">
+            <main className="flex-1 bg-white p-4">
                 <Outlet />
             </main>
         </div>
