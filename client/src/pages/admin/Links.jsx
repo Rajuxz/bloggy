@@ -18,9 +18,9 @@ const SIDEBAR_ITEMS = [
         icon: <Squares2X2Icon className={iconClass} />,
     },
     {
-        key: "analytics",
-        label: "Analytics",
-        link: "analytics/",
+        key: "Posts",
+        label: "Posts",
+        link: "manage-posts/",
         icon: <ArrowsRightLeftIcon className={iconClass} />,
     },
     {
