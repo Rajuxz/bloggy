@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router"
 import App from "./App"
 import { Hero } from "./components"
-import { Dashboard } from "./pages"
+import { AddPost, Dashboard, Home, Post } from "./pages"
 const router = createBrowserRouter([
     {
         path: "/",
@@ -15,8 +15,9 @@ const router = createBrowserRouter([
         path: "/admin",
         element: <Dashboard />,
         children: [
-            { index: true, element: <h1>Default Dashboard</h1> },
-            { path: "analytics/", element: <h1>Analytics</h1> },
+            { index: true, element: <Home /> },
+            { path: "manage-posts/", element: <Post /> },
+            { path: "add-post/", element: <AddPost /> },
             { path: "manage/", element: <h1>Manage</h1> },
             { path: "bots/", element: <h1>Bots</h1> },
             { path: "settings/", element: <h1>Settings</h1> },
