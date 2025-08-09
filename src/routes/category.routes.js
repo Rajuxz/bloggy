@@ -11,13 +11,12 @@ import {
 const router = Router()
 
 //use verifyJwt middleware in all the routes.
-router.use(verifyJwt)
 
-router.route("/add-category").post(addCategory)
-router.route("/remove-category").post(deleteCategory)
-router.route("/:id").patch(updateCategory)
+router.route("/add-category").post(verifyJwt, addCategory)
+router.route("/remove-category").post(verifyJwt, deleteCategory)
+router.route("/:id").patch(verifyJwt, updateCategory)
 router.route("/").get(getAllCategories)
-router.route("/deactivated").get(getDeactivatedCategory)
-router.route("/").patch(activateCategory)
+router.route("/deactivated").get(verifyJwt, getDeactivatedCategory)
+router.route("/").patch(verifyJwt, activateCategory)
 
 export default router
