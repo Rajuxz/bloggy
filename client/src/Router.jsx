@@ -1,16 +1,15 @@
 import { createBrowserRouter } from "react-router"
 import App from "./App"
-import { Hero } from "./components"
+import { Hero, Login } from "./components"
 import { AddPost, Dashboard, Home, Post } from "./pages"
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
-        children: [
-            { index: true, element: <Hero /> },
-            { path: "/login", element: <h1>Login Route test</h1> },
-        ],
+        children: [{ index: true, element: <Hero /> }],
     },
+    { path: "/login", element: <Login /> },
+
     {
         path: "/admin",
         element: <Dashboard />,
