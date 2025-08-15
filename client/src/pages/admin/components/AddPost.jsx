@@ -40,7 +40,7 @@ const AddPost = () => {
                         />
                     </div>
                 </div>
-                <div className="flex flex-row mt-5">
+                <div className="flex flex-row mt-5 mb-2">
                     <div className="mr-3">
                         <input
                             type="file"
